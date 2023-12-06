@@ -127,11 +127,11 @@ def scan_url_parameter(url:str,p,depth:int=None,manual:bool=False,verbose:bool=F
         options.add_argument('--headless')
         options.add_argument("--incognito")
         try:
-            driver = webdriver.Firefox(options=options)
-        except:
             geckodriver_path = "/snap/bin/geckodriver"  # specify the path to your geckodriver -> unfortunately have to do that since it cannot find it otherwise (firefox is installed with snap, selenium is not used to that)
             driver_service = Service(executable_path=geckodriver_path)
             driver = webdriver.Firefox(options=options,service=driver_service) 
+        except:
+            driver = webdriver.Firefox(options=options) 
         rxss_vulns: list[Vulnerability] = []
 
         print(f"Found {len(vulnerable_to_payloads)} reflections")
@@ -164,11 +164,11 @@ def scan_url_parameter_brute(url:str,p,depth:int,manual:bool=False,verbose:bool=
     options.add_argument('--headless')
     options.add_argument("--incognito")
     try:
-            driver = webdriver.Firefox(options=options)
-    except:
         geckodriver_path = "/snap/bin/geckodriver"  # specify the path to your geckodriver -> unfortunately have to do that since it cannot find it otherwise (firefox is installed with snap, selenium is not used to that)
         driver_service = Service(executable_path=geckodriver_path)
         driver = webdriver.Firefox(options=options,service=driver_service) 
+    except:
+        driver = webdriver.Firefox(options=options) 
     rxss_vulns: list[str] = []
 
     test_payloads = open(payload_list_path,"r").readlines()
@@ -199,22 +199,3 @@ def scan_url_parameter_brute(url:str,p,depth:int,manual:bool=False,verbose:bool=
     
 
 
-"""
-FIRST TEST IF THE SITE EVEN REFLECTS
-Things to account for TODO:
-First of all, there needs to be a way to test for payloads that:
-    Have a different input and output
-Second, a possible bypass of some ddos protection software. Or just something that is not behaving like a bandit. Wrecking the site with payloads.
-And you are mostly just getting autobanned, so how to overcome that?
-All of these things are not accounted for as of now
-"""
-
-"""
-Statistics ->
-300 42.6 seconds
-300 39.6 seconds
--> seems the difference is not too big but it would scale up when tested with larger amounts of payloads
-2000 270
-2000 220
-But truly it seems that the deep one is more effective by far
-"""

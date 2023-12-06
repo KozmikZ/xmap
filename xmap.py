@@ -16,7 +16,7 @@ parser.add_argument("-b","--brute",help="Do you want to brute force scan the web
 parser.add_argument("--crawl_depth",help="Manually set the amount of pages XMAP can crawl",type=int,default=30)
 parser.add_argument("--scan_depth",help="Manually set the amount of payloads that should be tested",type=int,default=100)
 parser.add_argument("--log",help="The file to which you would write down XSS vectors")
-parser.add_argument("--payload_list",help="Your own list of payloads in a .txt file",type=str,default="lib/payloads/payload_list")
+parser.add_argument("--payload_list",help="Your own list of payloads in a .txt file",type=str,default="lib/payloads/payload_list.txt")
 user_args = parser.parse_args()
 attack_point = user_args.target
 
