@@ -1,5 +1,5 @@
 import urllib3
-import re
+import re,requests
 from selenium import webdriver
 from lib.url import Url
 from lib.utils import rndhead
@@ -51,8 +51,8 @@ def scan_url_parameter(url:str,p,depth:int=None,manual:bool=False,verbose:bool=F
     # first test if parameter reflects on site:
     url:Url = Url(url)
     url.inject(p,"rnT3xqw") # injecting the payload into the url
-    resp = urllib3.request("GET",url.__repr__(),headers={"User-Agent":rndhead()})
-    reflections = re.finditer(string=str(resp.data),pattern=r"rnT3xqw")
+    resp = requests.get(url.__repr__(),headers={"User-Agent":rndhead()})
+    reflections = re.finditer(string=str(resp.content),pattern=r"rnT3xqw")
     if len(list(reflections))==0:
         print("No reflections found, exiting")
         return []
@@ -82,8 +82,8 @@ def scan_url_parameter(url:str,p,depth:int=None,manual:bool=False,verbose:bool=F
                 print(f"Testing payload: {CGREEN + payload + CEND}") # verbose log
 
             url.inject(p,locator_string+payload+terminator_string) # injecting the payload into the url
-            resp = urllib3.request("GET",url.__repr__(),headers={"User-Agent":rndhead()})
-            reflections,status = re.finditer(string=str(resp.data),pattern=r"sL3a.*?4jQn"),resp.status # find the terminator and locator strings and whatever is in between
+            resp = requests.get(url.__repr__(),headers={"User-Agent":rndhead()})
+            reflections,status = re.finditer(string=str(resp.content),pattern=r"sL3a.*?4jQn"),resp.status_code # find the terminator and locator strings and whatever is in between
             
 
             if verbose==False and dbg_c%100 == 0 :
@@ -99,7 +99,7 @@ def scan_url_parameter(url:str,p,depth:int=None,manual:bool=False,verbose:bool=F
                     perfect= False # perfect reflection boolean, prevents clogging the vulnerable_to_payloads list
                     for r in r_list:
                         st,en = r.span() # start and end of the reflection
-                        str_reflection = str(resp.data)[st+4:en-4] # the reflection string
+                        str_reflection = str(resp.content)[st+4:en-4] # the reflection string
                         if str_reflection==payload:
                             if verbose:
                                 print(CGREEN+f"Found possible XSS reflection for parameter {BOLD+p}"+CEND) # verbose log

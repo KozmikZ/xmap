@@ -1,14 +1,14 @@
-import urllib3
+import requests
 import bs4
 from lib.utils import rndhead,get_url_parameters
 from lib.url import Url
 
 
 def scrape_links(url:str,domain:str): # scrapes all links on a single page that are part of the domain
-    response = urllib3.request("GET",url,headers={"User-Agent":rndhead()})
+    response = requests.get(url,headers={"User-Agent":rndhead()})
     links : list[str] = []
-    if response.status==200:
-        site = bs4.BeautifulSoup(response.data,'html.parser')
+    if response.status_code==200:
+        site = bs4.BeautifulSoup(response.content,'html.parser')
         anchors = site.find_all("a" or "li")
         for a in anchors:
             href:str = a.attrs.get("href")
