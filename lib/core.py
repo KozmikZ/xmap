@@ -168,7 +168,10 @@ def scan_url_parameter_brute(url:str,p,depth:int,manual:bool=False,verbose:bool=
         driver_service = Service(executable_path=geckodriver_path)
         driver = webdriver.Firefox(options=options,service=driver_service) 
     except:
-        driver = webdriver.Firefox(options=options) 
+        try:
+            driver = webdriver.Firefox(options=options)
+        except:
+            raise "It seems that you don't have firefox installed. XMAP cannot definitively prove payloads without it."
     rxss_vulns: list[str] = []
 
     test_payloads = open(payload_list_path,"r").readlines()

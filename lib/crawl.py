@@ -23,7 +23,10 @@ def scrape_links(url:str,domain:str): # scrapes all links on a single page that 
     return links
 
 def crawl_through(inp_start_page:str,depth=100): # scrapes a domain for sites with parameters
-    domain = inp_start_page.split("//")[0]+"//"+inp_start_page.split("//")[1].split("/")[0]
+    try:
+        domain = inp_start_page.split("//")[0]+"//"+inp_start_page.split("//")[1].split("/")[0]
+    except:
+        raise(BaseException("Failed to parse target website url, check for typos"))
     print(f"Crawling starting from website {inp_start_page}")
     print(f"With max depth of {depth} pages")
     visited = {} # bfs variables...
